@@ -2,17 +2,21 @@ const express = require('express');
 const { Pool } = require('pg');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 const app = express();
 const port = 3000;
 
 // Configure PostgreSQL connection
 const pool = new Pool({
-    user: 'nhattan123',
-    host: 'localhost',
-    database: 'nhattan123',
-    password: 'nhattan123',
+    user: '',
+    host: '',
+    database: '',
+    password: '',
     port: 5432,
+    ssl: {
+        rejectUnauthorized: false // Chỉ nên sử dụng trong môi trường phát triển
+    }
 });
 
 // Middleware
@@ -24,10 +28,11 @@ app.use(session({
 }));
 
 // Serve static files from the "public" directory
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Set EJS as the template engine
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 // Main route to display products
 app.get('/', async (req, res) => {
